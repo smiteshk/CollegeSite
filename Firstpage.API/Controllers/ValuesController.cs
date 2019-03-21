@@ -22,12 +22,13 @@ namespace Firstpage.API.Controllers
             _context = context;
 
         }
-        // GET api/values
+        
+        [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> GetValues()//Asyncronous method.
+        public async Task<IActionResult> GetValues()
         {
-            //return new string[] { "value1", "value3" };
-            var values= await _context.Values.ToListAsync();//go the values table and get the stored values and return as the list.
+            var values = await _context.Values.ToListAsync();
+
             return Ok(values);
 
         }
