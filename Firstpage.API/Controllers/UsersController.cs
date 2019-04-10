@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Firstpage.API.Data;
 using Firstpage.API.Dtos;
+using Firstpage.API.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Firstpage.API.Controllers
 {
+    [ServiceFilter(typeof(LogUserActivity))]
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
