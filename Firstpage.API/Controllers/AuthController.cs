@@ -18,11 +18,10 @@ namespace Firstpage.API.Controllers
 
     public class AuthController : ControllerBase
     {
-
+        private readonly IAuthRepository _repo;
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
 
-        private readonly IAuthRepository _repo;
         public AuthController(IAuthRepository repo, IConfiguration config, IMapper mapper)
         {
             _mapper = mapper;
@@ -84,9 +83,12 @@ namespace Firstpage.API.Controllers
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
+            var user = _mapper.Map<UserForListDto>(userFromRepo);
+
             return Ok(new
             {
-                token = tokenHandler.WriteToken(token)
+                token = tokenHandler.WriteToken(token),
+                user
             });
 
         }
