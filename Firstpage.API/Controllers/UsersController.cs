@@ -6,6 +6,7 @@ using AutoMapper;
 using Firstpage.API.Data;
 using Firstpage.API.Dtos;
 using Firstpage.API.Helpers;
+using Firstpage.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -78,6 +79,35 @@ namespace Firstpage.API.Controllers
             throw new Exception($"Updating user {id} fail on Save");
 
             
+        }
+
+        [HttpPost("{id}/like/{recipientId}")]
+        public async Task<IActionResult> LikeUser(int id, int recipientId)
+        {
+            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) 
+                return  Unauthorized();
+
+            var like = await _repo.GetLike(id, recipientId);
+
+            if(like != null)
+                return BadRequest("You Have Already Liked the User");
+
+            if(await _repo.GetUser(recipientId) == null)
+                return NotFound();
+
+            like = new Like
+            {
+                LikerId = id,
+                LikeeId = recipientId
+            };
+
+            _repo.Add<Like>(like);
+
+            if (await _repo.SaveAll())
+                return Ok();
+
+            return BadRequest("Failed to Like User");
+
         }
 
     }
